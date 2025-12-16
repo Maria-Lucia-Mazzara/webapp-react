@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useGlobal } from "../contexts/GlobalContext";
+
 
 function FilmCard() {
     const [film, setFilm] = useState([])
+    const { setLoading } = useGlobal()
 
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:3000/film')
             .then(response => {
                 const result = response.data;
@@ -14,10 +18,10 @@ function FilmCard() {
 
             })
             .catch(error => {
-                console.error(error)
+                console.error(error);
             })
-            .then(() => {
-
+            .finally(() => {
+                setLoading(false);
             })
     }, [])
 
