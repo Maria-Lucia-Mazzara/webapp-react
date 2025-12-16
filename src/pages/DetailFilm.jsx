@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useGlobal } from "../contexts/GlobalContext";
 
 function DetailFilm() {
     const { id } = useParams();
-
+    const { setLoading } = useGlobal()
     const [movie, setMovie] = useState({});
     const [formData, setFormData] = useState({
         name: "",
@@ -14,11 +15,15 @@ function DetailFilm() {
 
 
     useEffect(() => {
+        setLoading(true)
         axios.get(`http://localhost:3000/film/${id}`)
             .then(res => {
                 setMovie(res.data);
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error(err))
+            .finally(() => {
+                setLoading(false);
+            })
     }, [id]);
 
 
